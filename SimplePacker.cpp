@@ -416,7 +416,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
 
 
-	// c. 섹션 압축하기
+	/* c. 섹션 압축하기 */
 	DWORD start = (DWORD)lpFile + pifh->VirtualAddress;
 	DWORD dwSize = pioh->SizeOfImage;		// 바이너리 전체의 크기
 
@@ -428,7 +428,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
 
 
-	// d. 섹션 3개 원하는 형태로 수정하고 나머지 섹션 헤더 지우기
+	/* d. 섹션 3개 원하는 형태로 수정하고 나머지 섹션 헤더 지우기 */
 	DWORD dwShellcodeSize = (DWORD)ShellcodeEnd - (DWORD)ShellcodeStart;
 
 	const char * sectionName = ".nothing";
