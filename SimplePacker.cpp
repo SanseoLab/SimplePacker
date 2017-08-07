@@ -41,7 +41,7 @@ __declspec(naked) int ShellcodeStart(VOID) {
 		xor    ebx, ebx
 
 		literal:
-		movsb
+			movsb
 			mov    bl, 2
 
 			nexttag :
@@ -57,30 +57,30 @@ __declspec(naked) int ShellcodeStart(VOID) {
 			inc    ecx
 			mov    al, 10h
 
-			getmorebits :
-		call   getbit
+		getmorebits :
+			call   getbit
 			adc    al, al
 			jnc    getmorebits
 			jnz    domatch
 			stosb
 			jmp    nexttag
 
-			codepair :
-		call   getgamma_no_ecx
+		codepair :
+			call   getgamma_no_ecx
 			sub    ecx, ebx
 			jnz    normalcodepair
 			call   getgamma
 			jmp    domatch_lastpos
 
-			shortmatch :
-		lodsb
+		shortmatch :
+			lodsb
 			shr    eax, 1
 			jz     donedepacking			// 디패킹이 끝나면 임포트 테이블 복구 루틴으로 분기한다.
 			adc    ecx, ecx
 			jmp    domatch_with_2inc
 
-			normalcodepair :
-		xchg   eax, ecx
+		normalcodepair :
+			xchg   eax, ecx
 			dec    eax
 			shl    eax, 8
 			lodsb
@@ -92,20 +92,20 @@ __declspec(naked) int ShellcodeStart(VOID) {
 			cmp    eax, 7fh
 			ja     domatch_new_lastpos
 
-			domatch_with_2inc :
-		inc    ecx
+		domatch_with_2inc :
+			inc    ecx
 
-			domatch_with_inc :
-		inc    ecx
+		domatch_with_inc :
+			inc    ecx
 
-			domatch_new_lastpos :
-		xchg   eax, ebp
+		domatch_new_lastpos :
+			xchg   eax, ebp
 
-			domatch_lastpos :
-		mov    eax, ebp
+		domatch_lastpos :
+			mov    eax, ebp
 			mov    bl, 1
 
-			domatch :
+		domatch :
 			push   esi
 			mov    esi, edi
 			sub    esi, eax
@@ -113,37 +113,37 @@ __declspec(naked) int ShellcodeStart(VOID) {
 			pop    esi
 			jmp    nexttag
 
-			getbit :
-		add    dl, dl
+		getbit :
+			add    dl, dl
 			jnz    stillbitsleft
 			mov    dl, [esi]
 			inc    esi
 			adc    dl, dl
 
-			stillbitsleft :
-		ret
+		stillbitsleft :
+			ret
 
-			getgamma :
-		xor    ecx, ecx
+		getgamma :
+			xor    ecx, ecx
 
-			getgamma_no_ecx :
-		inc    ecx
+		getgamma_no_ecx :
+			inc    ecx
 
-			getgammaloop :
-		call   getbit
+		getgammaloop :
+			call   getbit
 			adc    ecx, ecx
 			call   getbit
 			jc     getgammaloop
 			ret
 
-			donedepacking :					// 임포트 테이블 복구 루틴 시작
-		MOV ESI, 0xDDDDDDDD			// 이 임포트 테이블 복구 루틴을 위해 IAT에 저장된 DLL의 이름 및 함수들의 이름을 미리 특별한 형태로 생성하고 추가하였다.
+		donedepacking :					// 임포트 테이블 복구 루틴 시작
+			MOV ESI, 0xDDDDDDDD			// 이 임포트 테이블 복구 루틴을 위해 IAT에 저장된 DLL의 이름 및 함수들의 이름을 미리 특별한 형태로 생성하고 추가하였다.
 			nop							// 이 주소는 앞에서 생성되고 추가된 그 내용의 시작 주소이다.
 			nop
 			nop
 			MOV EBX, 0xEEEEEEEE			// 현재 패킹된 바이너리의 IAT 주소. 참고로 현재 바이너리는 LoadLibraryA()와 GetProcAddress()만을 가지고 있다.
 
-			gofirst :
+		gofirst :
 			INC ESI
 			LODS DWORD PTR DS : [ESI]
 			XCHG EAX, EDI
@@ -151,8 +151,8 @@ __declspec(naked) int ShellcodeStart(VOID) {
 			CALL DWORD PTR DS : [EBX]	// LoadLibraryA() 호출.
 			XCHG EAX, EBP
 
-			loopss :
-		LODS BYTE PTR DS : [ESI]
+		loopss :
+			LODS BYTE PTR DS : [ESI]
 			TEST AL, AL
 			JNE loopss
 			DEC BYTE PTR DS : [ESI]
@@ -162,19 +162,19 @@ __declspec(naked) int ShellcodeStart(VOID) {
 			LODS DWORD PTR DS : [ESI]
 			PUSH EAX
 			JMP getproc
-			gooep :
-		DEC BYTE PTR DS : [ESI]
+		gooep :
+			DEC BYTE PTR DS : [ESI]
 			JE end
 			PUSH ESI
 
-			getproc :
-		PUSH EBP
+		getproc :
+			PUSH EBP
 			CALL DWORD PTR DS : [EBX + 4]	// GetProcAddress() 호출.
 			STOS DWORD PTR ES : [EDI]
 			JMP loopss
 
-			end :
-		popad
+		end :
+			popad
 			ret							// OEP로 복귀
 
 	}
