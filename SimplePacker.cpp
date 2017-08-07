@@ -20,25 +20,25 @@
 
 __declspec(naked) int ShellcodeStart(VOID) {
 	__asm {
-		nop						// 32비트의 주소를 맞추기 위하여 nop 즉 0x90 명령어를 사용한다.
-		nop
-		nop
-		push   0xAAAAAAAA		// Source. 패킹된 바이너리의 시작 위치이다.
-		nop
-		nop
-		nop
-		push   0xBBBBBBBB		// Destination. 언패킹된 바이너리가 써질 실제 위치이다.
-		nop
-		nop
-		nop
-		push   0xCCCCCCCC		// OEP. 언패킹된 프로그램의 시작 위치 (마지막 ret 명령에 의해 사용된다).
+			nop						// 32비트의 주소를 맞추기 위하여 nop 즉 0x90 명령어를 사용한다.
+			nop
+			nop
+			push   0xAAAAAAAA		// Source. 패킹된 바이너리의 시작 위치이다.
+			nop
+			nop
+			nop
+			push   0xBBBBBBBB		// Destination. 언패킹된 바이너리가 써질 실제 위치이다.
+			nop
+			nop
+			nop
+			push   0xCCCCCCCC		// OEP. 언패킹된 프로그램의 시작 위치 (마지막 ret 명령에 의해 사용된다).
 
-		pushad
-		mov    esi, [esp + 40]
-		mov    edi, [esp + 36]
-		cld
-		mov    dl, 80h
-		xor    ebx, ebx
+			pushad
+			mov    esi, [esp + 40]
+			mov    edi, [esp + 36]
+			cld
+			mov    dl, 80h
+			xor    ebx, ebx
 
 		literal:
 			movsb
