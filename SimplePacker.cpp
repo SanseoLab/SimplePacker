@@ -20,7 +20,7 @@
 
 __declspec(naked) int ShellcodeStart(VOID) {
 	__asm {
-			nop						// 32비트의 주소를 맞추기 위하여 nop 즉 0x90 명령어를 사용한다.
+			nop				// 32비트의 주소를 맞추기 위하여 nop 즉 0x90 명령어를 사용한다.
 			nop
 			nop
 			push   0xAAAAAAAA		// Source. 패킹된 바이너리의 시작 위치이다.
@@ -75,7 +75,7 @@ __declspec(naked) int ShellcodeStart(VOID) {
 		shortmatch :
 			lodsb
 			shr    eax, 1
-			jz     donedepacking			// 디패킹이 끝나면 임포트 테이블 복구 루틴으로 분기한다.
+			jz     donedepacking		// 디패킹이 끝나면 임포트 테이블 복구 루틴으로 분기한다.
 			adc    ecx, ecx
 			jmp    domatch_with_2inc
 
@@ -136,12 +136,12 @@ __declspec(naked) int ShellcodeStart(VOID) {
 			jc     getgammaloop
 			ret
 
-		donedepacking :					// 임포트 테이블 복구 루틴 시작
-			MOV ESI, 0xDDDDDDDD			// 이 임포트 테이블 복구 루틴을 위해 IAT에 저장된 DLL의 이름 및 함수들의 이름을 미리 특별한 형태로 생성하고 추가하였다.
-			nop							// 이 주소는 앞에서 생성되고 추가된 그 내용의 시작 주소이다.
+		donedepacking :				// 임포트 테이블 복구 루틴 시작
+			MOV ESI, 0xDDDDDDDD		// 이 임포트 테이블 복구 루틴을 위해 IAT에 저장된 DLL의 이름 및 함수들의 이름을 미리 특별한 형태로 생성하고 추가하였다.
+			nop				// 이 주소는 앞에서 생성되고 추가된 그 내용의 시작 주소이다.
 			nop
 			nop
-			MOV EBX, 0xEEEEEEEE			// 현재 패킹된 바이너리의 IAT 주소. 참고로 현재 바이너리는 LoadLibraryA()와 GetProcAddress()만을 가지고 있다.
+			MOV EBX, 0xEEEEEEEE		// 현재 패킹된 바이너리의 IAT 주소. 참고로 현재 바이너리는 LoadLibraryA()와 GetProcAddress()만을 가지고 있다.
 
 		gofirst :
 			INC ESI
@@ -175,7 +175,7 @@ __declspec(naked) int ShellcodeStart(VOID) {
 
 		end :
 			popad
-			ret							// OEP로 복귀
+			ret				// OEP로 복귀
 
 	}
 }
